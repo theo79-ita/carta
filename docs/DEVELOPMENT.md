@@ -11,7 +11,7 @@ xcrun --sdk macosx --show-sdk-version
 open dist/Carta.app
 ```
 
-The script builds the SwiftPM executable in release mode, checks the linked SDK, assembles the app bundle and signs it ad hoc for local use. For version 0.2.13 it writes `dist/Carta.app` and `dist/Carta-0.2.13-Glass.zip`. That ZIP contains the named app bundle and its editable icon. SwiftPM build products go under `.build/`. Both output directories are ignored by Git.
+The script builds the SwiftPM executable in release mode, checks the linked SDK, assembles the app bundle and signs it ad hoc for local use. It writes `dist/Carta.app` and `dist/Carta.zip`. The ZIP contains `Carta.app` and its editable icon. SwiftPM build products go under `.build/`. Both output directories are ignored by Git.
 
 If a restricted build environment reports `Operation not permitted` during `GenerateDSYMFile`, recent Swift toolchains can produce the same application without a separate debug-symbol bundle:
 
@@ -78,4 +78,4 @@ This shorter run still uses AppKit. Use it to isolate document and editor result
 
 ## Prepare the next version
 
-Update `CFBundleShortVersionString`, `CFBundleVersion`, `CFBundleName` and `CFBundleDisplayName` in `scripts/Info.plist`. Increment the patch number for fixes and small improvements. For a significant feature, increment the minor number and reset the patch number. Update version-specific examples and output filenames in the documentation before tagging the release.
+Update `CFBundleShortVersionString` and increment `CFBundleVersion` in `scripts/Info.plist`. Keep both app name fields set to `Carta`. Increment the patch number for fixes and small improvements. For a significant feature, increment the minor number and reset the patch number. Use the bundle version in the READMEs and GitHub release tag.

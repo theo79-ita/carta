@@ -1,10 +1,12 @@
-# Carta 0.2.13 Glass
+# Carta
 
 Carta è un’app Markdown nativa per macOS, con un’anteprima per la lettura e una macchina da scrivere per comporre il testo.
 
+**Versione 0.3.0**
+
 ## Avvio
 
-Estrai **Carta-0.2.13-Glass.zip** e apri **Carta 0.2.13 Glass.app**. Nello ZIP trovi anche **Carta.icon**, modificabile con Icon Composer di Apple. Nel progetto puoi avviare la stessa build da **dist/Carta.app**. Puoi trascinare l’app in Applicazioni oppure avviarla direttamente da questa cartella. Richiede macOS 13 o successivo; la build viene prodotta per l’architettura del Mac usato per compilarla.
+Estrai **Carta.zip** e apri **Carta.app**. Nello ZIP trovi anche **Carta.icon**, modificabile con Icon Composer di Apple. Nel progetto puoi avviare la stessa build da **dist/Carta.app**. Puoi trascinare l’app in Applicazioni oppure avviarla direttamente da questa cartella. Richiede macOS 13 o successivo e la build viene prodotta per l’architettura del Mac usato per compilarla. Per vedere la versione installata, scegli **Carta → Informazioni su Carta**.
 
 Apri un file con **⌘O**, trascinalo nella finestra o usa **Apri con → Carta** nel Finder. L’app registra il supporto per i file Markdown senza cambiare l’app predefinita.
 
@@ -41,7 +43,7 @@ L’app apre un documento alla volta. I file `.mdx` vengono trattati come testo 
 
 ## Compilazione e test
 
-Per correzioni e piccoli miglioramenti incrementa il terzo numero di versione (0.2.5 → 0.2.6 → 0.2.7). Incrementa il secondo numero solo quando introduci una funzionalità importante e riparti da zero con il terzo (per esempio, da 0.2.7 a 0.3.0). A ogni rilascio aggiorna il nome e la versione in `scripts/Info.plist` e i riferimenti al pacchetto in questo README.
+Per correzioni e piccoli miglioramenti incrementa il terzo numero di versione (0.3.0 → 0.3.1). Per funzionalità importanti incrementa il secondo e riparti da zero con il terzo (0.3.1 → 0.4.0). A ogni rilascio aggiorna la versione e il numero di build in `scripts/Info.plist` e usa la stessa versione nel README e nel tag GitHub. Il nome dell’app è sempre **Carta**.
 
 Sono sufficienti gli strumenti da riga di comando di Xcode con Swift 5.9 o successivo. Non occorre scaricare pacchetti durante la compilazione.
 

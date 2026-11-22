@@ -4,7 +4,7 @@ Carta is a native Markdown editor and reader for macOS with a live preview, a cl
 
 Reading, Writing and Typewriter modes share the same text, including unsaved edits. In Typewriter mode, the carriage indicator follows the caret on a physically calibrated A4 page.
 
-**Version 0.2.13 Glass** · macOS 13 or later · English and Italian · MIT-licensed project
+**Version 0.3.0** · macOS 13 or later · English and Italian · MIT-licensed project
 
 [Italian documentation](docs/README.it.md)
 
@@ -18,6 +18,8 @@ open dist/Carta.app
 ```
 
 If the developer tools are missing, install them with `xcode-select --install`. The default build targets the architecture of the Mac doing the build. The build uses the macOS SDK and two JavaScript libraries already included in this repository. You can build offline once the tools are installed.
+
+Choose **Carta → About Carta** to see the installed version.
 
 ## Use Carta
 

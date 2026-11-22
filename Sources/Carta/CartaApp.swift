@@ -28,7 +28,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @StateObject private var state = ReaderState.shared
 
     var body: some Scene {
-        Window(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Carta", id: "reader") {
+        Window("Carta", id: "reader") {
             ReaderView(state: state)
                 .frame(minWidth: 760, minHeight: 520)
                 .preferredColorScheme(state.theme.scheme)

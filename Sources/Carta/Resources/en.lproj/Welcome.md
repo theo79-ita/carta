@@ -36,6 +36,7 @@ print(thought)
 | :--- | :--- |
 | Open a document | ⌘O |
 | Start a new document | ⌘N |
+| Open the Markdown context menu while writing | Press and release ⌥ Option on its own |
 | Save the document | ⌘S |
 | Find in the document | ⌘F |
 | View Markdown source | ⇧⌘U |

@@ -36,6 +36,7 @@ print(pensiero)
 | :--- | :--- |
 | Aprire un documento | ⌘O |
 | Iniziare a scrivere un nuovo documento | ⌘N |
+| Aprire il menu contestuale Markdown in scrittura | Premi e rilascia ⌥ Option da solo |
 | Salvare il documento | ⌘S |
 | Cercare nel testo | ⌘F |
 | Vedere il sorgente | ⇧⌘U |

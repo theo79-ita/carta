@@ -11,16 +11,16 @@ cd carta
 
 Run the tests and build the app from the repository root. The build script includes Carta's MIT license and its third-party notices in the application bundle. The app bundle and ZIP are generated under `dist/`. [Build and test guide](DEVELOPMENT.md) · [Third-party notices](../THIRD_PARTY_NOTICES.md)
 
-## Release version 0.2.13
+## Release version 0.3.0
 
 For a source release, run the tests, verify the version in `scripts/Info.plist`, and tag the commit you want users to download:
 
 ```sh
-git tag -a v0.2.13 -m "Carta 0.2.13 Glass"
-git push origin v0.2.13
+git tag -a v0.3.0 -m "Carta 0.3.0"
+git push origin v0.3.0
 ```
 
-On the repository page, open **Releases → Draft a new release**, select the existing tag `v0.2.13` and enter **Carta 0.2.13 Glass** as the title. Describe the changes and list the macOS 13+ requirement and the English and Italian interface languages. GitHub provides source archives from the tag. A source release can be published on its own. [GitHub release documentation](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+On the repository page, open **Releases → Draft a new release**, select the existing tag `v0.3.0` and enter **Carta 0.3.0** as the title. Describe the changes and list the macOS 13+ requirement and the English and Italian interface languages. GitHub provides source archives from the tag. A source release can be published on its own. The packaged app is always named `Carta.app`. [GitHub release documentation](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
 
 ### Optional Mac app download
 

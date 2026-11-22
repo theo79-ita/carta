@@ -119,7 +119,7 @@ final class A4TextContainer: NSTextContainer {
     init(display: PaperDisplay) {
         self.display = display
         super.init(frame: NSRect(x: 0, y: 0, width: 310, height: 84))
-        method.addItems(withTitles: ["Distanza fra le tacche (mm)", "Diagonale del monitor (pollici)"])
+        method.addItems(withTitles: [L10n.text("paper.rulerMethod"), L10n.text("paper.diagonalMethod")])
         method.frame = NSRect(x: 0, y: 42, width: 220, height: 26)
         method.target = self
         method.action = #selector(changeMethod)
@@ -141,11 +141,11 @@ final class A4TextContainer: NSTextContainer {
     @objc private func changeMethod() {
         let useRuler = method.indexOfSelectedItem == 0
         field.stringValue = ""
-        field.placeholderString = useRuler ? "mm" : "pollici"
+        field.placeholderString = useRuler ? "mm" : L10n.text("paper.inches")
         if !useRuler, let inches = display.diagonalInches {
             field.stringValue = inches.formatted(.number.precision(.fractionLength(0...3)))
         }
-        field.setAccessibilityLabel(useRuler ? "Distanza misurata in millimetri" : "Diagonale in pollici")
+        field.setAccessibilityLabel(useRuler ? L10n.text("paper.rulerLabel") : L10n.text("paper.diagonalLabel"))
         needsDisplay = true
     }
 

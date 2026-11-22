@@ -1,6 +1,9 @@
 (() => {
   'use strict';
   const reader = document.getElementById('reader');
+  const labels = /* READER_STRINGS */ {};
+  document.documentElement.lang = labels.language;
+  reader.setAttribute('aria-label', labels.document);
   let previous = {};
   let headings = [];
   let activeHeadingID = null;
@@ -130,15 +133,15 @@
           try {
             const url = new URL(raw, payload.assetBase);
             if (!['carta-asset:', 'https:', 'http:', 'data:'].includes(url.protocol)) { image.removeAttribute('src'); continue; }
-            image.src = url.href;
             image.loading = 'lazy';
             image.referrerPolicy = 'no-referrer';
             image.addEventListener('error', () => {
               const fallback = document.createElement('span');
               fallback.className = 'image-fallback';
-              fallback.textContent = `Immagine non disponibile${image.alt ? ': ' + image.alt : ''}`;
+              fallback.textContent = labels.imageMissing + (image.alt ? ': ' + image.alt : '');
               image.replaceWith(fallback);
             }, { once: true });
+            image.src = url.href;
           } catch { image.removeAttribute('src'); }
         }
         for (const link of reader.querySelectorAll('a[href]')) {
@@ -163,11 +166,11 @@
           if (!code) continue;
           const language = [...code.classList].find(c => c.startsWith('language-'))?.slice(9);
           const toolbar = document.createElement('div'); toolbar.className = 'code-toolbar';
-          const label = document.createElement('span'); label.textContent = language || 'codice';
-          const copy = document.createElement('button'); copy.textContent = 'Copia'; copy.title = 'Copia codice';
+          const label = document.createElement('span'); label.textContent = language || labels.code;
+          const copy = document.createElement('button'); copy.textContent = labels.copy; copy.title = labels.copyCode;
           copy.addEventListener('click', () => {
-            post({ copy: code.textContent }); copy.textContent = 'Copiato';
-            setTimeout(() => { copy.textContent = 'Copia'; }, 1400);
+            post({ copy: code.textContent }); copy.textContent = labels.copied;
+            setTimeout(() => { copy.textContent = labels.copy; }, 1400);
           });
           toolbar.append(label, copy); pre.prepend(toolbar);
         }
@@ -176,7 +179,7 @@
           wrapper.classList.toggle('wide-table', [...table.rows].some(row => row.cells.length >= 4));
           wrapper.tabIndex = 0;
           wrapper.setAttribute('role', 'region');
-          wrapper.setAttribute('aria-label', 'Tabella, scorrimento orizzontale');
+          wrapper.setAttribute('aria-label', labels.table);
           table.before(wrapper); wrapper.append(table);
         }
         postReaderState({ headings: outline });

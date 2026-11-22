@@ -23,111 +23,111 @@ enum MarkdownMenuEntry {
     case item(String, MarkdownMarker)
 
     static let categories: [Self] = [
-        .group("Titoli e paragrafi", [
-            .group("Titolo", (1...6).map { .item("Livello \($0)   " + String(repeating: "#", count: $0), .heading($0)) } + [
-                .item("Livello 1 sottolineato   ===", .setext("===")),
-                .item("Livello 2 sottolineato   ---", .setext("---"))
+        .group(L10n.text("markdown.headings"), [
+            .group(L10n.text("markdown.heading"), (1...6).map { .item(L10n.format("markdown.headingLevel", $0) + "   " + String(repeating: "#", count: $0), .heading($0)) } + [
+                .item(L10n.text("markdown.setext1"), .setext("===")),
+                .item(L10n.text("markdown.setext2"), .setext("---"))
             ]),
-            .item("Nuovo paragrafo", .literal("\n\n")),
-            .group("A capo", [
-                .item("Con due spazi", .literal("  \n")), .item("Con backslash", .literal("\\\n")),
-                .item("Con tag HTML   <br>", .literal("<br>"))
+            .item(L10n.text("markdown.newParagraph"), .literal("\n\n")),
+            .group(L10n.text("markdown.lineBreak"), [
+                .item(L10n.text("markdown.lineBreakSpaces"), .literal("  \n")), .item(L10n.text("markdown.lineBreakBackslash"), .literal("\\\n")),
+                .item(L10n.text("markdown.lineBreakHTML"), .literal("<br>"))
             ]),
-            .group("Separatore", ["---", "***", "___"].map { .item($0, .divider($0)) })
+            .group(L10n.text("markdown.divider"), ["---", "***", "___"].map { .item($0, .divider($0)) })
         ]),
-        .group("Stile del testo", [
-            .item("Grassetto   **", .inline("**", "testo", "**")),
-            .item("Corsivo   *", .inline("*", "testo", "*")),
-            .item("Grassetto e corsivo   ***", .inline("***", "testo", "***")),
-            .item("Barrato   ~~", .inline("~~", "testo", "~~")),
-            .item("Sottolineato", .inline("<u>", "testo", "</u>")),
-            .item("Evidenziato", .inline("<mark>", "testo", "</mark>")),
-            .item("Apice", .inline("<sup>", "2", "</sup>")),
-            .item("Pedice", .inline("<sub>", "2", "</sub>")),
-            .group("Altre grafie", [
-                .item("Grassetto   __", .inline("__", "testo", "__")),
-                .item("Corsivo   _", .inline("_", "testo", "_")),
-                .item("Grassetto e corsivo   ___", .inline("___", "testo", "___")),
-                .item("Enfasi dentro il grassetto", .inline("**Una frase con _", "enfasi", "_**")),
-                .item("Barrato   ~", .inline("~", "testo", "~"))
+        .group(L10n.text("markdown.style"), [
+            .item(L10n.text("markdown.boldStars"), .inline("**", L10n.text("sample.strongText"), "**")),
+            .item(L10n.text("markdown.italicStar"), .inline("*", L10n.text("sample.strongText"), "*")),
+            .item(L10n.text("markdown.boldItalicStars"), .inline("***", L10n.text("sample.strongText"), "***")),
+            .item(L10n.text("markdown.strikeDouble"), .inline("~~", L10n.text("sample.strongText"), "~~")),
+            .item(L10n.text("markdown.underline"), .inline("<u>", L10n.text("sample.strongText"), "</u>")),
+            .item(L10n.text("markdown.highlight"), .inline("<mark>", L10n.text("sample.strongText"), "</mark>")),
+            .item(L10n.text("markdown.superscript"), .inline("<sup>", "2", "</sup>")),
+            .item(L10n.text("markdown.subscript"), .inline("<sub>", "2", "</sub>")),
+            .group(L10n.text("markdown.alternateStyles"), [
+                .item(L10n.text("markdown.boldUnderscores"), .inline("__", L10n.text("sample.strongText"), "__")),
+                .item(L10n.text("markdown.italicUnderscore"), .inline("_", L10n.text("sample.strongText"), "_")),
+                .item(L10n.text("markdown.boldItalicUnderscores"), .inline("___", L10n.text("sample.strongText"), "___")),
+                .item(L10n.text("markdown.nestedEmphasis"), .inline(L10n.text("sample.emphasisPrefix"), L10n.text("sample.emphasis"), "_**")),
+                .item(L10n.text("markdown.strikeSingle"), .inline("~", L10n.text("sample.strongText"), "~"))
             ])
         ]),
-        .group("Elenchi e attività", [
-            .group("Elenco puntato", ["-", "*", "+"].map { .item("Punto elenco   " + $0, .lines($0 + " ", "Voce")) }),
-            .group("Elenco numerato", [
-                .item("Numeri con punto   1.", .ordered(".")), .item("Numeri con parentesi   1)", .ordered(")"))
+        .group(L10n.text("markdown.lists"), [
+            .group(L10n.text("markdown.bullets"), ["-", "*", "+"].map { .item(L10n.text("markdown.bullet") + "   " + $0, .lines($0 + " ", L10n.text("sample.listItem"))) }),
+            .group(L10n.text("markdown.ordered"), [
+                .item(L10n.text("markdown.orderedPeriod"), .ordered(".")), .item(L10n.text("markdown.orderedParen"), .ordered(")"))
             ]),
-            .item("Sottoelenco", .sublist),
-            .item("Attività da fare   [ ]", .lines("- [ ] ", "Attività")),
-            .item("Attività completata   [x]", .lines("- [x] ", "Attività"))
+            .item(L10n.text("markdown.sublist"), .sublist),
+            .item(L10n.text("markdown.taskOpen"), .lines("- [ ] ", L10n.text("sample.task"))),
+            .item(L10n.text("markdown.taskDone"), .lines("- [x] ", L10n.text("sample.task")))
         ]),
-        .group("Citazioni", [
-            .item("Citazione   >", .lines("> ", "Citazione")),
-            .item("Citazione annidata   > >", .lines("> > ", "Citazione"))
+        .group(L10n.text("markdown.quotes"), [
+            .item(L10n.text("markdown.quote"), .lines("> ", L10n.text("sample.quote"))),
+            .item(L10n.text("markdown.nestedQuote"), .lines("> > ", L10n.text("sample.quote")))
         ]),
-        .group("Link e immagini", [
-            .item("Link web", link("https://esempio.it")),
-            .item("Link con titolo", link("https://esempio.it", suffix: " \"Titolo\")")),
-            .item("Link a un file Markdown", link("appunti.md")),
-            .item("Link a una sezione", link("#titolo")),
-            .group("Indirizzi automatici", [
-                .item("URL tra parentesi angolari", .inline("<", "https://esempio.it", ">")),
-                .item("Email tra parentesi angolari", .inline("<", "nome@esempio.it", ">")),
-                .item("URL semplice", .inline("", "https://esempio.it", "")),
-                .item("Indirizzo www", .inline("", "www.esempio.it", "")),
-                .item("Email semplice", .inline("", "nome@esempio.it", ""))
+        .group(L10n.text("markdown.linksImages"), [
+            .item(L10n.text("markdown.webLink"), link(L10n.text("sample.url"))),
+            .item(L10n.text("markdown.titledLink"), link(L10n.text("sample.url"), suffix: " \"\(L10n.text("markdown.heading"))\")")),
+            .item(L10n.text("markdown.markdownLink"), link(L10n.text("sample.document"))),
+            .item(L10n.text("markdown.anchorLink"), link(L10n.text("sample.anchor"))),
+            .group(L10n.text("markdown.autolinks"), [
+                .item(L10n.text("markdown.angleURL"), .inline("<", L10n.text("sample.url"), ">")),
+                .item(L10n.text("markdown.angleEmail"), .inline("<", L10n.text("sample.email"), ">")),
+                .item(L10n.text("markdown.bareURL"), .inline("", L10n.text("sample.url"), "")),
+                .item(L10n.text("markdown.www"), .inline("", L10n.text("sample.www"), "")),
+                .item(L10n.text("markdown.bareEmail"), .inline("", L10n.text("sample.email"), ""))
             ]),
-            .group("Immagini", [
-                .item("Immagine locale", image("immagini/foto.jpg")),
-                .item("Immagine dal web", image("https://esempio.it/foto.jpg")),
-                .item("Immagine cliccabile", .linked(prefix: "[![", caption: "Descrizione", middle: "](immagini/foto.jpg)](", destination: "https://esempio.it", suffix: ")"))
+            .group(L10n.text("markdown.images"), [
+                .item(L10n.text("markdown.localImage"), image(L10n.text("sample.imagePath"))),
+                .item(L10n.text("markdown.webImage"), image(L10n.text("sample.imageURL"))),
+                .item(L10n.text("markdown.linkedImage"), .linked(prefix: "[![", caption: L10n.text("sample.description"), middle: "](\(L10n.text("sample.imagePath")))](", destination: L10n.text("sample.url"), suffix: ")"))
             ]),
-            .group("Riferimenti", [
-                .item("Link con identificatore", .linked(prefix: "[", caption: "Testo", middle: "][", destination: "id", suffix: "]")),
-                .item("Link abbreviato   [id][]", .reference(label: "id", short: false)),
-                .item("Link implicito   [id]", .reference(label: "id", short: true)),
-                .item("Immagine con identificatore", .linked(prefix: "![", caption: "Descrizione", middle: "][", destination: "id", suffix: "]")),
-                .item("Definizione di riferimento", .definition)
+            .group(L10n.text("markdown.references"), [
+                .item(L10n.text("markdown.referenceLink"), .linked(prefix: "[", caption: L10n.text("sample.capitalText"), middle: "][", destination: "id", suffix: "]")),
+                .item(L10n.text("markdown.collapsedLink"), .reference(label: "id", short: false)),
+                .item(L10n.text("markdown.shortcutLink"), .reference(label: "id", short: true)),
+                .item(L10n.text("markdown.referenceImage"), .linked(prefix: "![", caption: L10n.text("sample.description"), middle: "][", destination: "id", suffix: "]")),
+                .item(L10n.text("markdown.definition"), .definition)
             ])
         ]),
-        .group("Codice", [
-            .item("Codice in linea", .inlineCode),
-            .item("Blocco con backtick", .fence("`", language: "")),
-            .item("Blocco con tilde", .fence("~", language: "")),
-            .item("Blocco con linguaggio", .fence("`", language: "python")),
-            .item("Blocco con quattro spazi", .indentedCode)
+        .group(L10n.text("markdown.code"), [
+            .item(L10n.text("markdown.inlineCode"), .inlineCode),
+            .item(L10n.text("markdown.backtickBlock"), .fence("`", language: "")),
+            .item(L10n.text("markdown.tildeBlock"), .fence("~", language: "")),
+            .item(L10n.text("markdown.languageBlock"), .fence("`", language: "python")),
+            .item(L10n.text("markdown.indentedBlock"), .indentedCode)
         ]),
-        .group("Tabelle", [
-            .item("Inserisci tabella", .table),
-            .group("Allineamento colonna", [
-                .item("Sinistra   :---", .alignment(":---")), .item("Centro   :---:", .alignment(":---:")),
-                .item("Destra   ---:", .alignment("---:"))
+        .group(L10n.text("markdown.tables"), [
+            .item(L10n.text("markdown.table"), .table),
+            .group(L10n.text("markdown.columnAlignment"), [
+                .item(L10n.text("markdown.alignLeft"), .alignment(":---")), .item(L10n.text("markdown.alignCenter"), .alignment(":---:")),
+                .item(L10n.text("markdown.alignRight"), .alignment("---:"))
             ]),
-            .item("Barra verticale nella cella", .literal("\\|"))
+            .item(L10n.text("markdown.escapePipe"), .literal("\\|"))
         ]),
-        .group("Simboli e commenti", [
-            .item("Mostra i simboli letteralmente   \\", .escaped),
-            .item("Spazio indivisibile", .literal("&nbsp;")),
-            .item("Copyright", .literal("&copy;")),
-            .item("E commerciale", .literal("&amp;")),
-            .item("Commento nascosto", .inline("<!-- ", "Nota di revisione", " -->"))
+        .group(L10n.text("markdown.symbols"), [
+            .item(L10n.text("markdown.escaped"), .escaped),
+            .item(L10n.text("markdown.nbsp"), .literal("&nbsp;")),
+            .item(L10n.text("markdown.copyright"), .literal("&copy;")),
+            .item(L10n.text("markdown.ampersand"), .literal("&amp;")),
+            .item(L10n.text("markdown.comment"), .inline("<!-- ", L10n.text("sample.reviewNote"), " -->"))
         ]),
-        .group("Altri editor · solo sorgente", [
-            .item("Evidenziato   ==", .inline("==", "testo", "==")),
-            .item("Collegamento wiki", .inline("[[", "Nome nota", "]]")),
-            .item("Allegato wiki", .inline("![[", "allegato", "]]")),
-            .item("Richiamo a nota a piè di pagina", .inline("[^", "1", "]")),
-            .item("Definizione di nota a piè di pagina", .footnote),
-            .item("Riquadro nota", .quoteAlert)
+        .group(L10n.text("markdown.sourceOnly"), [
+            .item(L10n.text("markdown.highlightEquals"), .inline("==", L10n.text("sample.strongText"), "==")),
+            .item(L10n.text("markdown.wikiLink"), .inline("[[", L10n.text("sample.noteName"), "]]")),
+            .item(L10n.text("markdown.wikiAttachment"), .inline("![[", L10n.text("sample.attachment"), "]]")),
+            .item(L10n.text("markdown.footnoteReference"), .inline("[^", "1", "]")),
+            .item(L10n.text("markdown.footnoteDefinition"), .footnote),
+            .item(L10n.text("markdown.note"), .quoteAlert)
         ])
     ]
 
     private static func link(_ destination: String, suffix: String = ")") -> MarkdownMarker {
-        .linked(prefix: "[", caption: "Testo", middle: "](", destination: destination, suffix: suffix)
+        .linked(prefix: "[", caption: L10n.text("sample.capitalText"), middle: "](", destination: destination, suffix: suffix)
     }
 
     private static func image(_ destination: String) -> MarkdownMarker {
-        .linked(prefix: "![", caption: "Descrizione", middle: "](", destination: destination, suffix: ")")
+        .linked(prefix: "![", caption: L10n.text("sample.description"), middle: "](", destination: destination, suffix: ")")
     }
 }
 
@@ -153,7 +153,7 @@ extension TypewriterTextView {
                 return item
             }
         }
-        let menu = NSMenu(title: "Inserisci Markdown")
+        let menu = NSMenu(title: L10n.text("markdown.insert"))
         for category in MarkdownMenuEntry.categories { menu.addItem(makeItem(category)) }
         return menu
     }

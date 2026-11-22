@@ -14,7 +14,10 @@ CARTA_BIN="$(swift build "${CARTA_BUILD[@]}" "$@" --show-bin-path)"
 xcrun vtool -show-build "$CARTA_BIN/Carta" | awk -v sdk="$CARTA_SDK_VERSION" '
   $1 == "sdk" { found++; if ($2 != sdk) mismatch++ }
   END { if (!found || mismatch) { print "SDK macOS inatteso nel binario di Carta" > "/dev/stderr"; exit 1 } }'
-CARTA_APP="$PWD/dist/Carta.app"
+CARTA_STAGE="$(mktemp -d "$PWD/.build/release.XXXXXX")"
+trap 'rm -rf "$CARTA_STAGE"' EXIT
+CARTA_APP="$CARTA_STAGE/Carta.app"
+CARTA_OUTPUT="$PWD/dist/Carta.app"
 mkdir -p "$CARTA_APP/Contents/MacOS" "$CARTA_APP/Contents/Resources"
 cp "$CARTA_BIN/Carta" "$CARTA_APP/Contents/MacOS/Carta"
 cp -R "$CARTA_BIN/Carta_Carta.bundle" "$CARTA_APP/Contents/Resources/"
@@ -27,11 +30,22 @@ cp LICENSE Sources/Carta/Resources/vendor/*-LICENSE*.txt "$CARTA_LICENSES/"
 sed 's|Sources/Carta/Resources/vendor/||g' THIRD_PARTY_NOTICES.md > "$CARTA_LICENSES/THIRD_PARTY_NOTICES.md"
 codesign --force --deep --sign - "$CARTA_APP"
 CARTA_NAME="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' scripts/Info.plist)"
-CARTA_STAGE="$(mktemp -d "$PWD/.build/release.XXXXXX")"
-trap 'rm -rf "$CARTA_STAGE"' EXIT
+CARTA_ZIP="$PWD/dist/${CARTA_NAME// /-}.zip"
 mkdir "$CARTA_STAGE/contents"
 ditto "$CARTA_APP" "$CARTA_STAGE/contents/$CARTA_NAME.app"
 ditto Artwork/Carta.icon "$CARTA_STAGE/contents/Carta.icon"
 ditto -c -k --norsrc --noextattr "$CARTA_STAGE/contents" "$CARTA_STAGE/package.zip"
-mv "$CARTA_STAGE/package.zip" "$PWD/dist/${CARTA_NAME// /-}.zip"
-printf '\nApp pronta: %s\nArchivio: %s\n' "$CARTA_APP" "$PWD/dist/${CARTA_NAME// /-}.zip"
+
+# Publish the complete bundle so removed resources cannot survive a rebuild.
+mkdir -p "$PWD/dist"
+if [ -e "$CARTA_OUTPUT" ]; then
+  mv "$CARTA_OUTPUT" "$CARTA_STAGE/previous.app"
+fi
+if ! mv "$CARTA_APP" "$CARTA_OUTPUT"; then
+  if [ -e "$CARTA_STAGE/previous.app" ]; then
+    mv "$CARTA_STAGE/previous.app" "$CARTA_OUTPUT" || trap - EXIT
+  fi
+  exit 1
+fi
+mv "$CARTA_STAGE/package.zip" "$CARTA_ZIP"
+printf '\nApp pronta: %s\nArchivio: %s\n' "$CARTA_OUTPUT" "$CARTA_ZIP"

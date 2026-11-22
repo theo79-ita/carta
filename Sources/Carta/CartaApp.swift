@@ -5,7 +5,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
-        if let argument = CommandLine.arguments.dropFirst().first(where: { !$0.hasPrefix("-") }) {
+        if let argument = CommandLine.arguments.dropFirst().first, !argument.hasPrefix("-") {
             ReaderState.shared.open(URL(fileURLWithPath: argument))
         }
     }
@@ -38,48 +38,48 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) {
-                Button("Nuovo documento", action: state.newDocument).keyboardShortcut("n")
-                Button("Apri…", action: state.chooseFile).keyboardShortcut("o")
-                Menu("Apri recenti") {
+                Button(L10n.text("document.new"), action: state.newDocument).keyboardShortcut("n")
+                Button(L10n.text("document.open"), action: state.chooseFile).keyboardShortcut("o")
+                Menu(L10n.text("document.openRecent")) {
                     ForEach(state.recentURLs, id: \.self) { url in
                         Button(url.lastPathComponent) { state.open(url) }
                     }
                     Divider()
-                    Button("Cancella recenti", action: state.clearRecents).disabled(state.recentURLs.isEmpty)
+                    Button(L10n.text("document.clearRecent"), action: state.clearRecents).disabled(state.recentURLs.isEmpty)
                 }
             }
             CommandGroup(replacing: .saveItem) {
-                Button("Salva") { state.save() }.keyboardShortcut("s")
+                Button(L10n.text("document.save")) { state.save() }.keyboardShortcut("s")
                     .disabled(state.document.isWelcome || state.isLoading || (state.document.url != nil && !state.hasUnsavedChanges))
-                Button("Salva con nome…") { state.save(asCopy: true) }
+                Button(L10n.text("document.saveAs")) { state.save(asCopy: true) }
                     .keyboardShortcut("s", modifiers: [.command, .shift]).disabled(state.document.isWelcome || state.isLoading)
-                Button("Ricarica") { if let url = state.document.url { state.open(url) } }
+                Button(L10n.text("document.reload")) { if let url = state.document.url { state.open(url) } }
                     .keyboardShortcut("r").disabled(!state.canReload)
             }
             CommandGroup(replacing: .printItem) {
-                Button("Stampa / Salva PDF…") { state.web.printDocument() }.keyboardShortcut("p").disabled(state.mode.isWriting)
+                Button(L10n.text("document.print")) { state.web.printDocument() }.keyboardShortcut("p").disabled(state.mode.isWriting)
             }
             CommandGroup(after: .textEditing) {
-                Button("Cerca nel documento…") { state.searchVisible = true }.keyboardShortcut("f").disabled(state.mode.isWriting)
+                Button(L10n.text("document.searchCommand")) { state.searchVisible = true }.keyboardShortcut("f").disabled(state.mode.isWriting)
             }
             CommandGroup(after: .sidebar) {
-                Button("Lettura") { state.selectMode(.reading) }.keyboardShortcut("1", modifiers: [.command, .option])
-                Button("Scrittura normale") { state.selectMode(.normal) }.keyboardShortcut("2", modifiers: [.command, .option])
-                Button("Macchina da scrivere") { state.selectMode(.typewriter) }.keyboardShortcut("3", modifiers: [.command, .option])
-                Button("Calibra il foglio A4…", action: state.calibratePaper)
+                Button(L10n.text("mode.reading")) { state.selectMode(.reading) }.keyboardShortcut("1", modifiers: [.command, .option])
+                Button(L10n.text("mode.writing")) { state.selectMode(.normal) }.keyboardShortcut("2", modifiers: [.command, .option])
+                Button(L10n.text("mode.typewriter")) { state.selectMode(.typewriter) }.keyboardShortcut("3", modifiers: [.command, .option])
+                Button(L10n.text("paper.calibrateCommand"), action: state.calibratePaper)
                     .disabled(!state.mode.isWriting || state.paperDisplay.preferenceKey == nil)
                 Divider()
-                Button("Mostra/nascondi indice") { state.sidebarVisible.toggle() }
+                Button(L10n.text("outline.toggleCommand")) { state.sidebarVisible.toggle() }
                     .keyboardShortcut("s", modifiers: [.command, .control]).disabled(state.mode.isWriting)
-                Button(state.sourceVisible ? "Mostra anteprima" : "Mostra sorgente") { state.sourceVisible.toggle() }
+                Button(state.sourceVisible ? L10n.text("reader.preview") : L10n.text("reader.source")) { state.sourceVisible.toggle() }
                     .keyboardShortcut("u", modifiers: [.command, .shift]).disabled(state.mode.isWriting)
                 Divider()
-                Button("Ingrandisci testo") { state.adjustFont(1) }.keyboardShortcut("+").disabled(state.mode.isWriting)
-                Button("Riduci testo") { state.adjustFont(-1) }.keyboardShortcut("-").disabled(state.mode.isWriting)
-                Button("Dimensione originale") { state.fontSize = 17 }.keyboardShortcut("0").disabled(state.mode.isWriting)
+                Button(L10n.text("reader.zoomIn")) { state.adjustFont(1) }.keyboardShortcut("+").disabled(state.mode.isWriting)
+                Button(L10n.text("reader.zoomOut")) { state.adjustFont(-1) }.keyboardShortcut("-").disabled(state.mode.isWriting)
+                Button(L10n.text("reader.zoomReset")) { state.fontSize = 17 }.keyboardShortcut("0").disabled(state.mode.isWriting)
             }
             CommandGroup(replacing: .help) {
-                Button("Benvenuto in Carta", action: state.showWelcome)
+                Button(L10n.text("app.welcome"), action: state.showWelcome)
             }
         }
     }

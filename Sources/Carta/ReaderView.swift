@@ -30,7 +30,7 @@ struct ReaderView: View {
             }
         }
         .onDrop(of: [UTType.fileURL.identifier], isTargeted: $state.isDropTarget, perform: acceptDrop)
-        .alert("Operazione non riuscita", isPresented: Binding(get: { state.errorMessage != nil }, set: { if !$0 { state.errorMessage = nil } })) {
+        .alert(L10n.text("error.operationFailed"), isPresented: Binding(get: { state.errorMessage != nil }, set: { if !$0 { state.errorMessage = nil } })) {
             Button("OK") { state.errorMessage = nil }
         } message: { Text(state.errorMessage ?? "") }
         .onChange(of: state.searchVisible) { visible in
@@ -73,8 +73,8 @@ struct ReaderView: View {
             Label(state.mode.label, systemImage: state.mode.icon)
         }
         .menuStyle(.borderlessButton).fixedSize()
-        .help("Scegli Lettura, Scrittura normale o Macchina da scrivere")
-        .accessibilityLabel("Modalità")
+        .help(L10n.text("mode.help"))
+        .accessibilityLabel(L10n.text("mode.label"))
         .accessibilityValue(state.mode.label)
         .disabled(state.isLoading)
     }
@@ -99,18 +99,18 @@ struct ReaderView: View {
                 Button(action: state.newDocument) {
                     Image(systemName: "square.and.pencil").frame(width: 36, height: 32)
                 }
-                .help("Nuovo documento (⌘N)").accessibilityLabel("Nuovo documento")
+                .help(L10n.text("document.newHelp")).accessibilityLabel(L10n.text("document.new"))
                 Button(action: state.chooseFile) {
                     Image(systemName: "folder").frame(width: 36, height: 32)
                 }
-                .help("Apri un file (⌘O)").accessibilityLabel("Apri un file")
+                .help(L10n.text("document.openHelp")).accessibilityLabel(L10n.text("document.openLabel"))
                 Divider().frame(height: 16)
                 Button { state.save() } label: {
-                    Label("Salva", systemImage: "square.and.arrow.down")
+                    Label(L10n.text("document.save"), systemImage: "square.and.arrow.down")
                         .padding(.horizontal, 8).frame(height: 32)
                 }
                 .disabled(state.isLoading || (state.document.url != nil && !state.hasUnsavedChanges))
-                .help("Salva il documento (⌘S)")
+                .help(L10n.text("document.saveHelp"))
             }
             .buttonStyle(.borderless)
             .tint(.primary)
@@ -131,15 +131,15 @@ struct ReaderView: View {
                 Image(systemName: "sidebar.left").frame(width: 38, height: 34)
             }
             .writingGlass(in: Capsule())
-            .help("Mostra o nascondi l’indice (⌃⌘S)")
-            .accessibilityLabel("Mostra o nascondi indice")
+            .help(L10n.text("outline.toggleHelp"))
+            .accessibilityLabel(L10n.text("outline.toggleLabel"))
             Text(state.document.filename)
                 .font(.system(size: 13, weight: .semibold)).lineLimit(1).truncationMode(.middle)
                 .help(documentLocation)
             Spacer(minLength: 8)
             HStack(spacing: 8) {
                 Button(action: state.chooseFile) { Image(systemName: "folder").frame(width: 27, height: 30) }
-                    .help("Apri un file (⌘O)").accessibilityLabel("Apri un file")
+                    .help(L10n.text("document.openHelp")).accessibilityLabel(L10n.text("document.openLabel"))
                 Divider().frame(height: 16)
                 readerControls
             }
@@ -152,50 +152,50 @@ struct ReaderView: View {
     }
 
     private var documentLocation: String {
-        if state.hasUnsavedChanges { return "Modifiche da salvare" }
+        if state.hasUnsavedChanges { return L10n.text("document.unsaved") }
         if let url = state.document.url { return url.deletingLastPathComponent().lastPathComponent }
-        return state.document.isWelcome ? "Uno spazio per leggere." : "Nuovo documento"
+        return state.document.isWelcome ? L10n.text("app.welcomeSubtitle") : L10n.text("document.new")
     }
 
     private var readerControls: some View {
         Group {
             Button { state.searchVisible.toggle() } label: { Image(systemName: "magnifyingglass").frame(width: 26, height: 30) }
-                .help("Cerca nel documento (⌘F)").accessibilityLabel("Cerca nel documento")
+                .help(L10n.text("reader.findHelp")).accessibilityLabel(L10n.text("reader.find"))
             Menu {
-                Picker("Aspetto", selection: $state.theme) {
+                Picker(L10n.text("reader.appearance"), selection: $state.theme) {
                     ForEach(ReadingTheme.allCases) { theme in Text(theme.label).tag(theme) }
                 }
                 Divider()
-                Button("Ingrandisci testo") { state.adjustFont(1) }.disabled(state.fontSize >= 24)
-                Button("Riduci testo") { state.adjustFont(-1) }.disabled(state.fontSize <= 13)
-                Button("Dimensione originale") { state.fontSize = 17 }
+                Button(L10n.text("reader.zoomIn")) { state.adjustFont(1) }.disabled(state.fontSize >= 24)
+                Button(L10n.text("reader.zoomOut")) { state.adjustFont(-1) }.disabled(state.fontSize <= 13)
+                Button(L10n.text("reader.zoomReset")) { state.fontSize = 17 }
                 Divider()
-                Text("\(state.readingDocument.wordCount) parole · \(state.document.encoding) · \(state.fontSize) px")
-                Button("Stampa / Salva PDF…") { state.web.printDocument() }
+                Text(L10n.wordCount(state.readingDocument.wordCount) + " · \(state.document.encoding) · \(state.fontSize) px")
+                Button(L10n.text("document.print")) { state.web.printDocument() }
             } label: { Image(systemName: "textformat.size") }
-                .menuStyle(.borderlessButton).fixedSize().help("Aspetto e dimensione del testo")
-                .accessibilityLabel("Aspetto e dimensione del testo")
+                .menuStyle(.borderlessButton).fixedSize().help(L10n.text("reader.appearanceHelp"))
+                .accessibilityLabel(L10n.text("reader.appearanceHelp"))
             Button { state.sourceVisible.toggle() } label: {
                 Image(systemName: state.sourceVisible ? "doc.richtext" : "chevron.left.forwardslash.chevron.right")
                     .foregroundStyle(state.sourceVisible ? accent : .primary).frame(width: 26, height: 30)
-            }.help(state.sourceVisible ? "Mostra anteprima (⇧⌘U)" : "Mostra sorgente (⇧⌘U)")
-                .accessibilityLabel(state.sourceVisible ? "Mostra anteprima" : "Mostra sorgente")
+            }.help(state.sourceVisible ? L10n.text("reader.previewHelp") : L10n.text("reader.sourceHelp"))
+                .accessibilityLabel(state.sourceVisible ? L10n.text("reader.preview") : L10n.text("reader.source"))
         }
     }
 
     private var searchBar: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
-            TextField("Cerca nel documento", text: $state.searchText)
+            TextField(L10n.text("reader.find"), text: $state.searchText)
                 .textFieldStyle(.plain).focused($searchFocused)
                 .onAppear { DispatchQueue.main.async { searchFocused = true } }
                 .onSubmit { state.web.find(state.searchText, state: state) }
             Text(state.searchResult).font(.system(size: 11)).foregroundStyle(.secondary)
             Button { state.web.find(state.searchText, backwards: true, state: state) } label: { Image(systemName: "chevron.up") }
-                .accessibilityLabel("Risultato precedente")
+                .accessibilityLabel(L10n.text("reader.previousMatch"))
             Button { state.web.find(state.searchText, state: state) } label: { Image(systemName: "chevron.down") }
-                .accessibilityLabel("Risultato successivo")
-            Button("Fine") { state.searchVisible = false }
+                .accessibilityLabel(L10n.text("reader.nextMatch"))
+            Button(L10n.text("action.done")) { state.searchVisible = false }
         }.font(.system(size: 12)).padding(.horizontal, 20).frame(height: 42)
     }
 
@@ -223,7 +223,7 @@ private struct ReadingTimeFooter: View {
     }
 
     var body: some View {
-        Text("Tempo di lettura rimanente · \(duration)")
+        Text(L10n.format("reader.remaining", duration))
             .font(.caption.monospacedDigit())
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity)
@@ -243,17 +243,17 @@ private struct OutlineSidebar: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Indice").font(.system(size: 13, weight: .semibold)).accessibilityAddTraits(.isHeader)
+                Text(L10n.text("outline.title")).font(.system(size: 13, weight: .semibold)).accessibilityAddTraits(.isHeader)
                 Spacer()
                 Button(action: close) { Image(systemName: "chevron.down").font(.caption) }
-                    .buttonStyle(.plain).accessibilityLabel("Chiudi indice")
+                    .buttonStyle(.plain).accessibilityLabel(L10n.text("outline.close"))
             }
             .padding(.horizontal, 14).padding(.top, 14)
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 5) {
                         if sourceVisible || outline.items.isEmpty {
-                            Text(sourceVisible ? "Passa all’anteprima per navigare tra i titoli." : "Il documento non contiene titoli.")
+                            Text(sourceVisible ? L10n.text("outline.sourceHint") : L10n.text("outline.empty"))
                                 .font(.system(size: 12)).foregroundStyle(.secondary)
                                 .padding(.horizontal, 10).padding(.vertical, 8)
                         } else {

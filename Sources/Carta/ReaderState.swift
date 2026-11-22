@@ -7,9 +7,9 @@ enum CartaMode: String, CaseIterable, Identifiable {
     var id: Self { self }
     var label: String {
         switch self {
-        case .reading: return "Lettura"
-        case .normal: return "Scrittura normale"
-        case .typewriter: return "Macchina da scrivere"
+        case .reading: return L10n.text("mode.reading")
+        case .normal: return L10n.text("mode.writing")
+        case .typewriter: return L10n.text("mode.typewriter")
         }
     }
     var isWriting: Bool { self != .reading }
@@ -27,10 +27,10 @@ enum ReadingTheme: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var label: String {
         switch self {
-        case .system: return "Automatico"
-        case .light: return "Chiaro"
-        case .dark: return "Scuro"
-        case .paper: return "Carta"
+        case .system: return L10n.text("theme.system")
+        case .light: return L10n.text("theme.light")
+        case .dark: return L10n.text("theme.dark")
+        case .paper: return L10n.text("theme.paper")
         }
     }
     var scheme: ColorScheme? { self == .dark ? .dark : (self == .system ? nil : .light) }
@@ -93,8 +93,7 @@ enum ReadingTheme: String, CaseIterable, Identifiable {
     }
 
     private static func welcomeDocument() -> MarkdownDocument {
-        let welcome = (try? String(contentsOf: Resource.url("Welcome.md"), encoding: .utf8)) ?? "# Benvenuto in Carta"
-        return MarkdownDocument(text: welcome, isWelcome: true)
+        MarkdownDocument(text: L10n.welcome(), isWelcome: true)
     }
 
     func selectMode(_ selected: CartaMode) {
@@ -132,25 +131,25 @@ enum ReadingTheme: String, CaseIterable, Identifiable {
         let display = PaperDisplay(screen: screen)
         guard let key = display.preferenceKey else { return }
         let alert = NSAlert()
-        alert.messageText = "Calibra il foglio A4"
-        alert.informativeText = "Schermo: \(display.name). Misura con un righello la distanza fra le due tacche e inseriscila in millimetri. Puoi anche scegliere la diagonale del monitor."
+        alert.messageText = L10n.text("paper.calibrate")
+        alert.informativeText = L10n.format("paper.instructions", display.name)
         let controls = PaperCalibrationView(display: display)
         alert.accessoryView = controls
-        alert.addButton(withTitle: "Applica")
-        alert.addButton(withTitle: "Annulla")
-        alert.addButton(withTitle: "Usa misura automatica")
+        alert.addButton(withTitle: L10n.text("action.apply"))
+        alert.addButton(withTitle: L10n.text("action.cancel"))
+        alert.addButton(withTitle: L10n.text("paper.automatic"))
         alert.window.initialFirstResponder = controls.field
         alert.beginSheetModal(for: window) { [weak self, weak window] result in
             guard let self, result != .alertSecondButtonReturn, let screen = window?.screen else { return }
             var current = PaperDisplay(screen: screen)
             guard current.preferenceKey == key, current.points == display.points else {
-                self.errorMessage = "Lo schermo è cambiato. Riapri la calibrazione sullo schermo da misurare."
+                self.errorMessage = L10n.text("paper.changedScreen")
                 return
             }
             switch result {
             case .alertFirstButtonReturn:
                 guard let inches = controls.selectedDiagonal, (1...1000).contains(inches) else {
-                    self.errorMessage = "Inserisci una misura positiva, usando la virgola o il punto per i decimali."
+                    self.errorMessage = L10n.text("paper.invalidMeasurement")
                     return
                 }
                 current.diagonalInches = inches
@@ -184,7 +183,7 @@ enum ReadingTheme: String, CaseIterable, Identifiable {
             destination = url
         } else {
             let panel = NSSavePanel()
-            panel.title = "Salva il documento"
+            panel.title = L10n.text("document.saveTitle")
             panel.nameFieldStringValue = document.filename
             panel.directoryURL = document.url?.deletingLastPathComponent()
             panel.allowedContentTypes = [UTType(filenameExtension: "md") ?? .plainText, .plainText]
@@ -208,11 +207,11 @@ enum ReadingTheme: String, CaseIterable, Identifiable {
     func confirmLeavingDocument() -> Bool {
         guard hasUnsavedChanges else { return true }
         let alert = NSAlert()
-        alert.messageText = "Salvare le modifiche a «\(document.filename)»?"
-        alert.informativeText = "Le modifiche andranno perse se continui senza salvare."
-        alert.addButton(withTitle: "Salva")
-        alert.addButton(withTitle: "Annulla").keyEquivalent = "\u{1b}"
-        alert.addButton(withTitle: "Non salvare")
+        alert.messageText = L10n.format("document.confirmSave", document.filename)
+        alert.informativeText = L10n.text("document.discardMessage")
+        alert.addButton(withTitle: L10n.text("document.save"))
+        alert.addButton(withTitle: L10n.text("action.cancel")).keyEquivalent = "\u{1b}"
+        alert.addButton(withTitle: L10n.text("document.discard"))
         switch alert.runModal() {
         case .alertFirstButtonReturn: return save()
         case .alertThirdButtonReturn: return true
@@ -222,7 +221,7 @@ enum ReadingTheme: String, CaseIterable, Identifiable {
 
     func chooseFile() {
         let panel = NSOpenPanel()
-        panel.title = "Apri un file Markdown"
+        panel.title = L10n.text("document.openTitle")
         panel.allowedContentTypes = MarkdownDocument.extensions.compactMap { UTType(filenameExtension: $0) }
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
@@ -328,11 +327,4 @@ enum ReadingTheme: String, CaseIterable, Identifiable {
     func select(_ id: String?) {
         if activeID != id, id == nil || items.contains(where: { $0.id == id }) { activeID = id }
     }
-}
-
-enum Resource {
-    static func url(_ name: String) -> URL {
-        Bundle.module.resourceURL!.appendingPathComponent("Resources").appendingPathComponent(name)
-    }
-    static func text(_ name: String) -> String { (try? String(contentsOf: url(name), encoding: .utf8)) ?? "" }
 }

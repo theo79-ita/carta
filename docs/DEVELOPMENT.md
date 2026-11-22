@@ -11,7 +11,7 @@ xcrun --sdk macosx --show-sdk-version
 open dist/Carta.app
 ```
 
-The script builds the SwiftPM executable in release mode, checks the linked SDK, assembles the app bundle and signs it ad hoc for local use. For version 0.2.12 it writes `dist/Carta.app` and `dist/Carta-0.2.12-Glass.zip`. That ZIP contains the named app bundle and its editable icon. SwiftPM build products go under `.build/`. Both output directories are ignored by Git.
+The script builds the SwiftPM executable in release mode, checks the linked SDK, assembles the app bundle and signs it ad hoc for local use. For version 0.2.13 it writes `dist/Carta.app` and `dist/Carta-0.2.13-Glass.zip`. That ZIP contains the named app bundle and its editable icon. SwiftPM build products go under `.build/`. Both output directories are ignored by Git.
 
 If a restricted build environment reports `Operation not permitted` during `GenerateDSYMFile`, recent Swift toolchains can produce the same application without a separate debug-symbol bundle:
 
@@ -30,7 +30,8 @@ Use the default command when you want debug symbols for crash reports.
 | `Sources/Carta/WriterView.swift`, `TypewriterTextView.swift`, `A4Paper.swift`, `WritingGlass.swift` | Writing modes, typewriter interaction and sounds, physical page sizing and controls. |
 | `Sources/Carta/MarkdownMenu.swift`, `MarkdownInsertion.swift` | Formatting commands, keyboard menu and text transformations. |
 | `Sources/Carta/ReaderView.swift`, `WebReader.swift`, `Resources/reader.*` under the same directory | Reader window, WebKit bridge, page template, styles and rendering logic. |
-| `Sources/Carta/Resources/` | Welcome document, eight WAV samples, reader resources and vendored JavaScript. |
+| `Sources/Carta/Localization.swift` and `Resources/{en,it}.lproj/` | Language selection, translations for the app and WebKit preview, and welcome documents. |
+| `Sources/Carta/Resources/` | Eight WAV samples, reader resources and vendored JavaScript. |
 | `Artwork/` | Editable Icon Composer document, compiled catalog and fallback ICNS. |
 | `Tests/CartaTests/TestRunner.swift`, `scripts/` | Native test runner, test/build commands and app metadata. |
 
@@ -66,6 +67,8 @@ shasum -a 256 Sources/Carta/Resources/vendor/marked.js Sources/Carta/Resources/v
 ## Tests
 
 The repository uses a custom Swift test runner. Execute `./scripts/test.sh` from a logged-in macOS desktop session. It compiles the runner with `swiftc` and exercises document decoding and saves, external changes, physical page layout, typewriter interaction, formatting operations and the Option menu. WebKit checks cover the rendered document, tables, outline navigation and the reading-time estimate.
+
+To check a specific language, run `./scripts/test.sh -AppleLanguages '(en)' --expect-language=en` or use `it` for both values. Keep the two `Localizable.strings` catalogs in sync when adding a label.
 
 ```sh
 ./scripts/test.sh --without-webkit

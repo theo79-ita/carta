@@ -4,17 +4,17 @@
 
 Open a Markdown file with **⌘O**, drop it into the window, or choose **Open With → Carta** in Finder. Use **⌘N** to begin a new document in the last writing mode you used. Carta registers as an alternate editor for Markdown documents. You can also open plain text from within the app.
 
-Choose **Lettura** to preview the current text, even before saving. **⌘S** writes changes to the current file. If another program changes the file on disk, use **⇧⌘S** to save your draft under another name. Save As writes UTF-8. When saving to the original file, Carta preserves supported encodings where the text can be represented.
+Choose **Reading** to preview the current text, even before saving. **⌘S** writes changes to the current file. If another program changes the file on disk, use **⇧⌘S** to save your draft under another name. Save As writes UTF-8. When saving to the original file, Carta preserves supported encodings where the text can be represented.
 
 ## Work with Markdown
 
-Tap and release **Option** on its own to open the insertion menu. Use **↑** and **↓** to move, **→** to enter a submenu, **←** to return, **Return** to insert and **Esc** to dismiss. The same commands are available through **Inserisci Markdown** in the context menu.
+Tap and release **Option** on its own to open the insertion menu. Use **↑** and **↓** to move, **→** to enter a submenu, **←** to return, **Return** to insert and **Esc** to dismiss. The same commands are available through **Insert Markdown** in the context menu.
 
-Select some text to wrap it in formatting, select several lines to turn them into a list, or select tab-separated cells to create a table. A template inserted at an empty caret selects its first editable field. Use **⌘Z** to undo it. Entries under **Altri editor · solo sorgente** insert syntax intended for other Markdown readers.
+Select some text to wrap it in formatting, select several lines to turn them into a list, or select tab-separated cells to create a table. A template inserted at an empty caret selects its first editable field. Use **⌘Z** to undo it. Entries under **Other Editors · Source Only** insert syntax intended for other Markdown readers.
 
 ## Set up the typewriter
 
-Choose **Macchina da scrivere**. The ruler tracks the caret while the page stays still as you type. On Return the indicator moves back to the left margin and the ruler follows the next line. The paper advances a few lines once the active line reaches about two thirds of the writing area. You can also scroll manually.
+Choose **Typewriter**. The ruler tracks the caret while the page stays still as you type. On Return the indicator moves back to the left margin and the ruler follows the next line. The paper advances a few lines once the active line reaches about two thirds of the writing area. You can also scroll manually.
 
 The A4 page represents 210 × 297 mm using the physical size reported by the display. If the scale looks wrong, click **A4** in the lower-right corner. Measure the distance between the two marks with a ruler and enter it in millimetres, or enter the display diagonal in inches. Carta remembers the correction for each display. Additional sheets continue the same text without inserting page breaks into the Markdown file.
 

@@ -100,19 +100,19 @@ enum MarkdownMarker {
             edit.selection.location = range.location + edit.replacement.utf16.count
             return edit
         case let .heading(level):
-            return formattedLines(sample: "Titolo", prefix: { _ in String(repeating: "#", count: level) + " " }, removing: #"^ {0,3}#{1,6}(?:[ \t]+|$)"#)
+            return formattedLines(sample: L10n.text("markdown.heading"), prefix: { _ in String(repeating: "#", count: level) + " " }, removing: #"^ {0,3}#{1,6}(?:[ \t]+|$)"#)
         case let .lines(prefix, placeholder):
             return formattedLines(sample: placeholder, prefix: { _ in prefix }, removing: prefix.hasPrefix(">") ? nil : listMarker)
         case let .ordered(delimiter):
-            return formattedLines(sample: "Prima voce", prefix: { "\($0 + 1)\(delimiter) " }, removing: listMarker)
+            return formattedLines(sample: L10n.text("sample.firstItem"), prefix: { "\($0 + 1)\(delimiter) " }, removing: listMarker)
         case let .setext(underline):
             var start = 0, end = 0
             document.getLineStart(&start, end: nil, contentsEnd: &end, for: selection)
             range = NSRange(location: start, length: end - start)
             let value = document.substring(with: range)
-            return block("", value.isEmpty ? "Titolo" : value, newline + underline)
+            return block("", value.isEmpty ? L10n.text("markdown.heading") : value, newline + underline)
         case .inlineCode, .fence:
-            let value = selected.isEmpty ? "codice" : selected
+            let value = selected.isEmpty ? L10n.text("sample.code") : selected
             let character: Character
             let minimum: Int
             if case let .fence(fence, _) = self { character = fence; minimum = 3 }
@@ -137,7 +137,7 @@ enum MarkdownMarker {
         case let .reference(label, short):
             return field("[", selected.isEmpty ? label : selected, short ? "]" : "][]")
         case .definition:
-            return block("[", selected.isEmpty ? "id" : selected, "]: https://esempio.it \"Titolo\"")
+            return block("[", selected.isEmpty ? "id" : selected, "]: \(L10n.text("sample.url")) \"\(L10n.text("markdown.heading"))\"")
         case .sublist:
             var start = 0, end = 0
             document.getLineStart(&start, end: nil, contentsEnd: &end, for: selection)
@@ -147,18 +147,18 @@ enum MarkdownMarker {
                 let line = document.substring(with: previous) as NSString
                 let marker = line.range(of: #"^ *(?:[-+*]|[0-9]+[.)])[ \t]+"#, options: .regularExpression)
                 if marker.location != NSNotFound {
-                    return formattedLines(sample: "Sottovoce", prefix: { _ in String(repeating: " ", count: marker.length) + "- " }, removing: listMarker)
+                    return formattedLines(sample: L10n.text("sample.nestedItem"), prefix: { _ in String(repeating: " ", count: marker.length) + "- " }, removing: listMarker)
                 }
             }
             range = NSRange(location: start, length: end - start)
             let content = document.substring(with: range)
-            let rows = content.isEmpty ? ["Sottovoce"] : content.componentsByLine
-            return block("- Voce" + newline + "  - ", rows.joined(separator: newline + "  - "), "")
+            let rows = content.isEmpty ? [L10n.text("sample.nestedItem")] : content.componentsByLine
+            return block("- " + L10n.text("sample.listItem") + newline + "  - ", rows.joined(separator: newline + "  - "), "")
         case .indentedCode:
-            let value = selected.isEmpty ? "codice" : selected
+            let value = selected.isEmpty ? L10n.text("sample.code") : selected
             return block("    ", value.componentsByLine.joined(separator: newline + "    "), "")
         case .footnote:
-            return block("[^1]: ", selected.isEmpty ? "Testo della nota" : selected, "")
+            return block("[^1]: ", selected.isEmpty ? L10n.text("sample.noteText") : selected, "")
         case .table, .alignment:
             var alignment = "---"
             if case let .alignment(marker) = self {
@@ -167,7 +167,10 @@ enum MarkdownMarker {
             }
             // A tab-separated selection can be pasted from a spreadsheet and turned into a table.
             let lines = selected.componentsByLine
-            var rows = selected.isEmpty ? [["Colonna 1", "Colonna 2"], ["Dato 1", "Dato 2"]] :
+            var rows = selected.isEmpty ? [
+                (1...2).map { L10n.format("sample.tableColumn", $0) },
+                (1...2).map { L10n.format("sample.tableValue", $0) }
+            ] :
                 lines.map { $0.components(separatedBy: "\t") }
             if rows.count > 1 && rows.last == [""] { rows.removeLast() }
             let columns = max(2, rows.map(\.count).max() ?? 2)
@@ -189,7 +192,7 @@ enum MarkdownMarker {
             edit.selection.length = escapeCell(rows[0][0]).utf16.count
             return edit
         case .quoteAlert:
-            let value = selected.isEmpty ? "Testo della nota" : selected
+            let value = selected.isEmpty ? L10n.text("sample.noteText") : selected
             return block("> [!NOTE]" + newline + "> ", value.componentsByLine.joined(separator: newline + "> "), "")
         }
     }

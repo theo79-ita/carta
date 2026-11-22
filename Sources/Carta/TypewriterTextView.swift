@@ -103,7 +103,7 @@ enum TypewriterSound: String {
         insertionPointColor = TypewriterPaper.ink
         selectedTextAttributes = [.backgroundColor: NSColor.selectedTextBackgroundColor,
                                   .foregroundColor: NSColor.selectedTextColor]
-        setAccessibilityLabel("Foglio della macchina da scrivere")
+        setAccessibilityLabel(L10n.text("typewriter.sheet"))
     }
 
     required init?(coder: NSCoder) { nil }
@@ -161,7 +161,7 @@ enum TypewriterSound: String {
         breakUndoCoalescing()
         self.mechanical = mechanical
         insertionPointColor = mechanical ? TypewriterPaper.typewriterInk : TypewriterPaper.ink
-        setAccessibilityLabel(mechanical ? "Foglio della macchina da scrivere" : "Scrittura normale")
+        setAccessibilityLabel(mechanical ? L10n.text("typewriter.sheet") : L10n.text("mode.writing"))
         paper = A4Paper(scale: scale)
         container.paper = paper
         container.containerSize.width = mechanical ? 10_000_000 : paper.width - 2 * paper.horizontalMargin

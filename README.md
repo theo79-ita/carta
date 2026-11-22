@@ -4,7 +4,7 @@ Carta is a native Markdown editor and reader for macOS with a live preview, a cl
 
 Reading, Writing and Typewriter modes share the same text, including unsaved edits. In Typewriter mode, the carriage indicator follows the caret on a physically calibrated A4 page.
 
-**Version 0.2.12 Glass** · macOS 13 or later · Italian interface · MIT-licensed project
+**Version 0.2.13 Glass** · macOS 13 or later · English and Italian · MIT-licensed project
 
 [Italian documentation](docs/README.it.md)
 
@@ -23,11 +23,13 @@ If the developer tools are missing, install them with `xcode-select --install`. 
 
 Press **⌘O** to open a document, drag one into the window, or choose **Open With → Carta** in Finder. Press **⌘N** for a new document. Use the mode selector at the top left or the shortcuts below.
 
+Carta follows your preferred macOS language. To choose English or Italian just for Carta, use **System Settings → General → Language & Region → Applications**, then reopen Carta.
+
 | Mode | Shortcut | What you can do |
 | --- | --- | --- |
-| Lettura (Reading) | ⌥⌘1 | Follow headings in the outline, search the document, copy a code block or print to PDF. The remaining reading time follows your scroll position, starting from an estimate of 220 words per minute. |
-| Scrittura normale (Writing) | ⌥⌘2 | Edit plain Markdown with soft wrapping. Tap and release Option for a keyboard-driven formatting menu at the caret, or right-click a selection to format it. |
-| Macchina da scrivere (Typewriter) | ⌥⌘3 | Write on a calibrated A4 sheet with a 60-column margin. The bell rings six characters before the margin. Press Return for a new line, click the lock to release the margin, or click the speaker to mute the sound. |
+| Reading | ⌥⌘1 | Follow headings in the outline, search the document, copy a code block or print to PDF. The remaining reading time follows your scroll position, starting from an estimate of 220 words per minute. |
+| Writing | ⌥⌘2 | Edit plain Markdown with soft wrapping. Tap and release Option for a keyboard-driven formatting menu at the caret, or right-click a selection to format it. |
+| Typewriter | ⌥⌘3 | Write on a calibrated A4 sheet with a 60-column margin. The bell rings six characters before the margin. Press Return for a new line, click the lock to release the margin, or click the speaker to mute the sound. |
 
 In either writing mode, use **⌘S** to save or **⇧⌘S** for Save As. In reading mode, use **⌘F** to search, **⇧⌘U** to view the Markdown source and **⌘P** to print or save a PDF. [Full user guide](docs/USER_GUIDE.md)
 

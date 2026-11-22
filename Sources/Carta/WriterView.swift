@@ -36,8 +36,8 @@ struct WriterView: View {
                 .font(.system(size: 11, weight: .medium)).buttonStyle(.plain)
                 .padding(.horizontal, 10).padding(.vertical, 5)
                 .writingGlass(in: Capsule()).padding(12)
-                .help("Calibra la misura del foglio A4 su questo schermo")
-                .accessibilityLabel("Calibra la misura del foglio A4")
+                .help(L10n.text("paper.calibrateHelp"))
+                .accessibilityLabel(L10n.text("paper.calibrateLabel"))
                 .disabled(state.paperDisplay.preferenceKey == nil)
         }
         .overlay(alignment: .topTrailing) {
@@ -65,17 +65,17 @@ private struct GlassCarriage: View {
                 Image(systemName: state.marginReleased ? "lock.open" : "lock")
                     .frame(width: controlWidth, height: 32)
             }
-            .accessibilityLabel("Margine a 60 colonne").accessibilityValue(state.marginReleased ? "Libero" : "Attivo")
-            .help(state.marginReleased ? "Ripristina il margine a 60 colonne" : "Sblocca il margine destro")
+            .accessibilityLabel(L10n.text("typewriter.margin")).accessibilityValue(state.marginReleased ? L10n.text("typewriter.released") : L10n.text("typewriter.locked"))
+            .help(state.marginReleased ? L10n.text("typewriter.restoreMargin") : L10n.text("typewriter.releaseMargin"))
             scale
                 .allowsHitTesting(false)
-                .accessibilityLabel("Colonna").accessibilityValue(String(state.editorColumn + 1))
+                .accessibilityLabel(L10n.text("typewriter.column")).accessibilityValue(String(state.editorColumn + 1))
             Button { state.typewriterSound.toggle() } label: {
                 Image(systemName: state.typewriterSound ? "speaker.wave.2" : "speaker.slash")
                     .frame(width: controlWidth, height: 32)
             }
-            .accessibilityLabel("Suoni della macchina da scrivere").accessibilityValue(state.typewriterSound ? "Attivi" : "Disattivati")
-            .help(state.typewriterSound ? "Disattiva i suoni" : "Attiva i suoni")
+            .accessibilityLabel(L10n.text("typewriter.sounds")).accessibilityValue(state.typewriterSound ? L10n.text("typewriter.soundOn") : L10n.text("typewriter.soundOff"))
+            .help(state.typewriterSound ? L10n.text("typewriter.mute") : L10n.text("typewriter.unmute"))
         }
         .padding(.horizontal, sidePadding)
         .buttonStyle(.plain).foregroundStyle(ink)

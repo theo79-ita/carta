@@ -25,6 +25,7 @@ struct VerificationError: Error, CustomStringConvertible { let description: Stri
                 try runner.testMarkdownMarkers()
                 try runner.testMarkdownShortcut()
                 try runner.testPhysicalPaper()
+                try runner.testLocalization()
                 if CommandLine.arguments.contains("--without-webkit") {
                     print("PASS: \(runner.checks) document and typewriter checks.")
                 } else {
@@ -251,7 +252,7 @@ struct VerificationError: Error, CustomStringConvertible { let description: Stri
             return nil
         }
         try check(menu.items.map(\.title) == titles, "Keyboard menu starts with just the Markdown categories")
-        guard let styles = menu.item(withTitle: "Stile del testo")?.submenu else {
+        guard let styles = menu.item(withTitle: L10n.text("markdown.style"))?.submenu else {
             throw VerificationError(description: "Missing style submenu")
         }
         styles.performActionForItem(at: 0)
@@ -353,22 +354,45 @@ struct VerificationError: Error, CustomStringConvertible { let description: Stri
         try check(AssetAccess.resolve(request.url!, inside: root) == nil, "Symlink escape")
     }
 
+    func testLocalization() throws {
+        func catalog(_ language: L10n.Language) throws -> [String: String] {
+            let data = try Data(contentsOf: Resource.url("\(language.rawValue).lproj/Localizable.strings"))
+            guard let strings = try PropertyListSerialization.propertyList(from: data, format: nil) as? [String: String] else {
+                throw VerificationError(description: "Invalid localization catalog: \(language)")
+            }
+            return strings
+        }
+        let italian = try catalog(.italian)
+        let english = try catalog(.english)
+        try check(Set(italian.keys) == Set(english.keys), "Both languages provide the same translation keys")
+        for (language, strings) in [(L10n.Language.italian, italian), (.english, english)] {
+            try check(strings.allSatisfy { L10n.text($0.key, language: language) == $0.value && !$0.value.isEmpty },
+                      "Every \(language) translation is available through the app’s lookup")
+        }
+        if let expected = CommandLine.arguments.first(where: { $0.hasPrefix("--expect-language=") }) {
+            try check(L10n.current.rawValue == String(expected.dropFirst("--expect-language=".count)),
+                      "The per-process language preference selects the app language")
+        }
+        let isEnglish = L10n.current == .english
+        try check(MarkdownDocument().filename == (isEnglish ? "Untitled.md" : "Senza titolo.md"), "Suggested filename follows the app language")
+        try check(L10n.welcome().hasPrefix(isEnglish ? "# Words come first." : "# Le parole, al centro."), "Welcome document follows the app language")
+        try check(L10n.wordCount(1) == (isEnglish ? "1 word" : "1 parola"), "Singular word count is localized")
+        let heading = MarkdownMarker.heading(2).edit(in: "", selection: NSRange(), newline: "\n")
+        try check(heading.replacement == (isEnglish ? "## Heading" : "## Titolo"), "Markdown insertion is localized without changing the syntax")
+        let table = MarkdownMarker.table.edit(in: "", selection: NSRange(), newline: "\n")
+        try check(table.replacement.hasPrefix(isEnglish ? "| Column 1 | Column 2 |" : "| Colonna 1 | Colonna 2 |"),
+                  "Table template and column numbers are localized")
+    }
+
     func testRenderer() async throws {
-        let root = URL(fileURLWithPath: CommandLine.arguments[1])
-        func resource(_ name: String) throws -> String { try String(contentsOf: root.appendingPathComponent(name), encoding: .utf8) }
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
         configuration.userContentController.add(self, name: "carta")
         web = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: configuration)
         web.navigationDelegate = self
-        let html = try resource("reader.html")
-            .replacingOccurrences(of: "/* MARKED_LIBRARY */", with: resource("vendor/marked.js"))
-            .replacingOccurrences(of: "/* PURIFY_LIBRARY */", with: resource("vendor/purify.js"))
-            .replacingOccurrences(of: "/* READER_SCRIPT */", with: resource("reader.js"))
-            .replacingOccurrences(of: "/* READER_STYLES */", with: resource("reader.css"))
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             navigationContinuation = continuation
-            web.loadHTMLString(html, baseURL: nil)
+            web.loadHTMLString(Resource.readerPage(), baseURL: nil)
         }
         let fixture = """
         # Caffè & idee
@@ -403,7 +427,9 @@ struct VerificationError: Error, CustomStringConvertible { let description: Stri
           strong:document.querySelector('strong').textContent, code:document.querySelector('pre code').textContent,
           unsafe:document.querySelectorAll('#reader script,#reader iframe,[onerror],a[href^="javascript:"]').length,
           compromised:!!window.compromised, checkbox:document.querySelector('input').disabled,
-          link:document.querySelector('a').href, theme:document.documentElement.dataset.theme})
+          link:document.querySelector('a').href, theme:document.documentElement.dataset.theme,
+          language:document.documentElement.lang, copy:document.querySelector('.code-toolbar button').textContent,
+          tableLabel:document.querySelector('.table-scroll').getAttribute('aria-label')})
         """) as! [String: Any]
         try check(result["headings"] as? [String] == ["caffè-idee", "ripetuto", "ripetuto-1", "ripetuto-1-1"], "Heading IDs including duplicates")
         try check(result["tables"] as? Int == 1, "GFM table")
@@ -414,6 +440,11 @@ struct VerificationError: Error, CustomStringConvertible { let description: Stri
         try check(result["checkbox"] as? Bool == true, "Read-only checkbox")
         try check(result["link"] as? String == "file:///tmp/secondo.md", "Relative Markdown link")
         try check(result["theme"] as? String == "paper", "Paper theme")
+        let english = L10n.current == .english
+        try check(result["language"] as? String == L10n.current.rawValue, "Preview language matches the app")
+        try check(result["copy"] as? String == (english ? "Copy" : "Copia"), "Code copy button is localized")
+        try check(result["tableLabel"] as? String == (english ? "Table, horizontally scrollable" : "Tabella, scorrimento orizzontale"),
+                  "Table accessibility label is localized")
         let found = try await web.find("grassetto", configuration: WKFindConfiguration())
         try check(found.matchFound, "Native document search")
         var source = payload; source["source"] = true

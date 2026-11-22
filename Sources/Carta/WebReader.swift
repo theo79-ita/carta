@@ -13,7 +13,7 @@ import UniformTypeIdentifiers
         configuration.caseSensitive = false
         view?.find(query, configuration: configuration) { result in
             guard state.searchText == query else { return }
-            state.searchResult = query.isEmpty ? "" : (result.matchFound ? "Trovato" : "Nessun risultato")
+            state.searchResult = query.isEmpty ? "" : (result.matchFound ? L10n.text("reader.found") : L10n.text("reader.noMatches"))
         }
     }
     func scroll(to id: String) {
@@ -45,12 +45,7 @@ struct WebReader: NSViewRepresentable {
         view.allowsMagnification = true
         state.web.view = view
         context.coordinator.view = view
-        let page = Resource.text("reader.html")
-            .replacingOccurrences(of: "/* MARKED_LIBRARY */", with: Resource.text("vendor/marked.js"))
-            .replacingOccurrences(of: "/* PURIFY_LIBRARY */", with: Resource.text("vendor/purify.js"))
-            .replacingOccurrences(of: "/* READER_SCRIPT */", with: Resource.text("reader.js"))
-            .replacingOccurrences(of: "/* READER_STYLES */", with: Resource.text("reader.css"))
-        view.loadHTMLString(page, baseURL: nil)
+        view.loadHTMLString(Resource.readerPage(), baseURL: nil)
         return view
     }
 
@@ -88,7 +83,7 @@ struct WebReader: NSViewRepresentable {
                   let json = String(data: data, encoding: .utf8), previous != json else { return }
             previous = json
             view.evaluateJavaScript("window.Carta.render(\(json))") { [weak self] _, error in
-                if let error { self?.state.errorMessage = "Impossibile visualizzare il documento: \(error.localizedDescription)" }
+                if let error { self?.state.errorMessage = L10n.format("error.render", error.localizedDescription) }
             }
         }
 

@@ -1,12 +1,14 @@
-# Carta 0.2.12 Glass
+# Carta 0.2.13 Glass
 
 Carta è un’app Markdown nativa per macOS, con un’anteprima per la lettura e una macchina da scrivere per comporre il testo.
 
 ## Avvio
 
-Estrai **Carta-0.2.12-Glass.zip** e apri **Carta 0.2.12 Glass.app**. Nello ZIP trovi anche **Carta.icon**, modificabile con Icon Composer di Apple. Nel progetto puoi avviare la stessa build da **dist/Carta.app**. Puoi trascinare l’app in Applicazioni oppure avviarla direttamente da questa cartella. Richiede macOS 13 o successivo; la build viene prodotta per l’architettura del Mac usato per compilarla.
+Estrai **Carta-0.2.13-Glass.zip** e apri **Carta 0.2.13 Glass.app**. Nello ZIP trovi anche **Carta.icon**, modificabile con Icon Composer di Apple. Nel progetto puoi avviare la stessa build da **dist/Carta.app**. Puoi trascinare l’app in Applicazioni oppure avviarla direttamente da questa cartella. Richiede macOS 13 o successivo; la build viene prodotta per l’architettura del Mac usato per compilarla.
 
 Apri un file con **⌘O**, trascinalo nella finestra o usa **Apri con → Carta** nel Finder. L’app registra il supporto per i file Markdown senza cambiare l’app predefinita.
+
+Carta segue la lingua preferita di macOS. Per scegliere l’inglese o l’italiano solo per Carta, usa **Impostazioni di Sistema → Generali → Lingua e zona → Applicazioni**, poi riapri l’app.
 
 ## Scrittura
 

@@ -14,8 +14,8 @@ struct MarkdownDocument {
     let modified: Date?
     let fileData: Data?
     let isWelcome: Bool
-    var title: String { url?.deletingPathExtension().lastPathComponent ?? (isWelcome ? "Benvenuto in Carta" : "Senza titolo") }
-    var filename: String { url?.lastPathComponent ?? (isWelcome ? "Benvenuto.md" : "Senza titolo.md") }
+    var title: String { url?.deletingPathExtension().lastPathComponent ?? (isWelcome ? L10n.text("app.welcome") : L10n.text("document.untitled")) }
+    var filename: String { url?.lastPathComponent ?? (isWelcome ? L10n.text("document.welcomeFilename") : L10n.text("document.untitledFilename")) }
     var wordCount: Int { text.split(whereSeparator: { $0.isWhitespace }).count }
     var readingSeconds: Int { Int(ceil(Double(wordCount) * 60 / 220)) }
 
@@ -103,9 +103,9 @@ enum DocumentError: LocalizedError {
     case tooLarge, invalidEncoding, changedOnDisk
     var errorDescription: String? {
         switch self {
-        case .tooLarge: return "Il documento supera il limite di 20 MB."
-        case .invalidEncoding: return "Il file non contiene testo leggibile. Usa un file Markdown in UTF-8 o UTF-16."
-        case .changedOnDisk: return "Il file è cambiato o è stato spostato. Usa Salva con nome per conservare le tue modifiche in un altro file."
+        case .tooLarge: return L10n.text("error.fileSize")
+        case .invalidEncoding: return L10n.text("error.encoding")
+        case .changedOnDisk: return L10n.text("error.changedOnDisk")
         }
     }
 }

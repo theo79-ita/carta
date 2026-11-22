@@ -1,0 +1,9 @@
+.build/
+.swiftpm/
+dist/
+.DS_Store
+/github/
+/generated_images/
+/Immagine ChatGPT 29 set 2026, 14_48_39.png
+/Artwork/Carta-Icon-Composer.png
+/Artwork/Carta.png

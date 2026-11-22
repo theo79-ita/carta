@@ -1,0 +1,75 @@
+:root {
+  color-scheme: light;
+  --bg: #fcfaf6; --text: #303337; --heading: #202429; --muted: #62686a;
+  --line: #e9e9e3; --soft: #f6f6f2; --accent: #23686c; --quote: #faf8f3;
+  --font-size: 17px;
+}
+:root[data-theme="paper"] { --bg: #f9f5ea; --text: #494438; --heading: #342e23; --line: #e6dfce; --soft: #f0eadb; --quote: #f2eddf; }
+:root[data-theme="dark"] { color-scheme: dark; --bg: #252a2e; --text: #dbe1e0; --heading: #f2f4f1; --muted: #aab5b5; --line: #383c34; --soft: #292c27; --accent: #8dcfce; --quote: #292c25; }
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] { color-scheme: dark; --bg: #252a2e; --text: #dbe1e0; --heading: #f2f4f1; --muted: #aab5b5; --line: #383c34; --soft: #292c27; --accent: #8dcfce; --quote: #292c25; }
+}
+* { box-sizing: border-box; }
+html { background: transparent; scroll-padding-top: 60px; }
+body { margin: 0; padding: 6px 8px 18px; color: var(--text); font: var(--font-size)/1.65 Georgia, 'Times New Roman', serif; overflow-wrap: anywhere; -webkit-font-smoothing: antialiased; }
+.sheet { --gutter: clamp(26px, 5vw, 64px); max-width: 850px; min-height: calc(100vh - 24px); margin-inline: auto; padding-block: clamp(30px, 5vw, 58px) 30px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 9px; box-shadow: 0 3px 12px #17263421; }
+.sheet:has(> main > .wide-table), .sheet:has(> main.source) { max-width: 1460px; }
+main { width: calc(100% - 2 * var(--gutter)); max-width: 68ch; margin-inline: auto; }
+main > :first-child { margin-top: 0; }
+h1,h2,h3,h4,h5,h6 { color: var(--heading); line-height: 1.3; font-weight: 650; letter-spacing: -.025em; }
+h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 2.25em; font-weight: 650; letter-spacing: -.045em; margin: 0 0 .55em; }
+h2 { font-size: 1.45em; margin: 1.55em 0 .35em; }
+h3 { font-size: 1.12em; margin: 1.8em 0 .5em; }
+h4,h5,h6 { margin: 1.4em 0 .5em; }
+p { margin: 0 0 1.15em; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration: none; }
+strong { font-weight: 650; color: var(--heading); }
+blockquote { margin: 1.6em 0; padding: 15px 22px; border-left: 3px solid var(--accent); background: var(--quote); border-radius: 0 6px 6px 0; color: var(--text); }
+blockquote > :last-child { margin-bottom: 0; }
+ul,ol { padding-left: 1.5em; margin: .8em 0 1.3em; }
+li { padding-left: .2em; margin: .3em 0; }
+li > ul,li > ol { margin: .3em 0; }
+li > p { margin: .4em 0; }
+li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.4em; }
+input[type="checkbox"] { accent-color: var(--accent); margin-right: .6em; vertical-align: middle; }
+code,pre { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+code { font-size: .82em; background: var(--soft); border: 1px solid var(--line); padding: .15em .4em; border-radius: 4px; }
+pre { margin: 1.6em 0; background: var(--soft); border: 1px solid var(--line); border-radius: 9px; overflow: auto; line-height: 1.65; padding: 16px 20px 20px; }
+pre code { display: block; font-size: .78em; padding: 0; border: 0; background: transparent; overflow-wrap: normal; white-space: pre; }
+.code-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 14px; color: var(--muted); font: 10px -apple-system, sans-serif; text-transform: uppercase; letter-spacing: 1.1px; }
+.code-toolbar button { font: 11px -apple-system, sans-serif; border: 0; color: var(--muted); background: transparent; cursor: pointer; padding: 3px 0 3px 12px; }
+.code-toolbar button:hover { color: var(--accent); }
+hr { height: 1px; border: 0; background: var(--line); margin: 2.3em 0; }
+.table-scroll { overflow-x: auto; margin: 1.5em 0; border: 1px solid var(--line); border-radius: 7px; }
+/* Dense tables can use the window width while prose keeps its reading measure. */
+main > .wide-table { width: min(1400px, calc(100vw - 48px)); margin-left: 50%; transform: translateX(-50%); }
+.table-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* `anywhere` would make a column's minimum width as small as one character. */
+table { border-collapse: collapse; width: 100%; font-size: .85em; overflow-wrap: normal; word-break: normal; }
+th,td { text-align: left; vertical-align: top; padding: 11px 15px; border-bottom: 1px solid var(--line); }
+th[align="right"],td[align="right"] { text-align: right; }
+th[align="center"],td[align="center"] { text-align: center; }
+th { background: var(--soft); color: var(--heading); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+img { max-width: 100%; height: auto; border-radius: 7px; }
+.image-fallback { display: block; padding: 15px; font-size: .8em; color: var(--muted); border: 1px dashed var(--line); }
+main.source { max-width: none; }
+.source-content { font-size: .82em; margin: 0; padding: 0; border: 0; background: transparent; white-space: pre-wrap; overflow-wrap: anywhere; }
+::selection { background: #60a6aa55; }
+@media (max-width: 650px) { h1 { font-size: 1.95em; } }
+@media print {
+  :root { color-scheme: light !important; --bg: white !important; --text: #222 !important; --heading: #111 !important; --soft: #f5f5f5 !important; --line: #ddd !important; --accent: #654323 !important; --quote: #f8f8f8 !important; --font-size: 11pt !important; }
+  body { padding: 0; }
+  .sheet, .sheet:has(> main) { max-width: none; min-height: 0; border: 0; box-shadow: none; padding: 0; }
+  main { width: 100%; max-width: none; }
+  h1,h2,h3,h4 { break-after: avoid; }
+  pre,blockquote,tr,img { break-inside: avoid; }
+  pre code { white-space: pre-wrap; }
+  .code-toolbar button { display: none; }
+  .table-scroll { overflow: visible; }
+  main > .wide-table { width: 100%; margin-left: 0; transform: none; }
+  table { table-layout: fixed; }
+  th,td { overflow-wrap: anywhere; padding: 7px 9px; }
+}
